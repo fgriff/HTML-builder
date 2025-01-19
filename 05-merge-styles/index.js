@@ -2,6 +2,7 @@ const path = require('path');
 const fsp = require('fs/promises');
 const fs = require('fs');
 const { stdout } = require('process');
+const os = require('os');
 
 const createBundle = async () => {
   try {
@@ -16,7 +17,7 @@ const createBundle = async () => {
         const rs = fs.createReadStream(srcFilePath);
 
         rs.on('data', (chunk) => {
-          ws.write(`${chunk}\n`);
+          ws.write(`${chunk}${os.EOL}`);
         });
       }
     });
