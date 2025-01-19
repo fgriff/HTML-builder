@@ -6,20 +6,24 @@ const srcFolderPath = path.join(__dirname, 'files');
 const destFolderPath = path.join(__dirname, 'files-copy');
 
 const copyDir = async (src, dest) => {
-  await fs.rm(dest, { recursive: true, force: true });
-  await fs.mkdir(dest, { recursive: true });
-
   try {
+    await fs.mkdir(dest, { recursive: true });
+
+    const destFilesList = await fs.readdir(dest, { withFileTypes: true });
+
+    destFilesList.forEach(async (file) => {
+      const destPath = path.join(dest, file.name);
+      await fs.unlink(destPath);
+    });
+
     const srcFilesList = await fs.readdir(src, { withFileTypes: true });
 
-    srcFilesList.forEach((file) => {
+    srcFilesList.forEach(async (file) => {
       const srcPath = path.join(src, file.name);
       const destPath = path.join(dest, file.name);
 
       if (file.isFile()) {
-        fs.copyFile(srcPath, destPath);
-      } else {
-        copyDir(srcPath, destPath);
+        await fs.copyFile(srcPath, destPath);
       }
     });
   } catch (error) {
