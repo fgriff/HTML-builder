@@ -48,8 +48,8 @@ const createHtml = async (componentsPath, templatePath, indexPath) => {
 
     await Promise.all(
       srcFilesList.map((file) => {
-        return new Promise((resolve) => {
-          if (path.extname(file.name).slice(1) === 'html') {
+        if (file.isFile() && path.extname(file.name).slice(1) === 'html') {
+          return new Promise((resolve) => {
             const componentPath = path.join(componentsPath, file.name);
             const componentName = path.parse(componentPath).name;
 
@@ -61,8 +61,8 @@ const createHtml = async (componentsPath, templatePath, indexPath) => {
                 template = template.replaceAll(`{{${componentName}}}`, result);
                 resolve();
               });
-          }
-        });
+          });
+        }
       }),
     );
 
@@ -84,7 +84,7 @@ const createCss = async (srcStyles, destStyles) => {
 
     await Promise.all(
       srcFilesList.map((file) => {
-        if (path.extname(file.name).slice(1) === 'css') {
+        if (file.isFile() && path.extname(file.name).slice(1) === 'css') {
           return new Promise((resolve) => {
             const srcFilePath = path.join(srcStyles, file.name);
             const rs = fs.createReadStream(srcFilePath);
