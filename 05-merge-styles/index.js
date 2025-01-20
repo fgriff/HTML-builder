@@ -12,7 +12,7 @@ const createBundle = async () => {
     const filesList = await fsp.readdir(srcFolderPath, { withFileTypes: true });
 
     filesList.forEach((file) => {
-      if (path.extname(file.name).slice(1) === 'css') {
+      if (file.isFile() && path.extname(file.name).slice(1) === 'css') {
         const srcFilePath = path.join(srcFolderPath, file.name);
         const rs = fs.createReadStream(srcFilePath);
 
